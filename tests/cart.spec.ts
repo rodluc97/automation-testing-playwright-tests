@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('User Story 002: Verify Shopping Cart Functionality', () => {
+test.describe('User Story 002: Shopping Cart Functionality', () => {
 
 test.beforeEach(async ({ page }) => {
   await page.goto('https://www.saucedemo.com/');
