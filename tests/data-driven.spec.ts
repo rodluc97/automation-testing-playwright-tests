@@ -2,10 +2,13 @@ import { test, expect } from '@playwright/test';
 // 1. Importamos el archivo JSON con los datos de los usuarios
 import usuarios from '../data/usuarios.json';
 
+
+test.describe('User Story 003: Verify Data-Driven Testing for Multiple Users', () => {
+
 // 2. Creamos un bucle que envuelve al test
 usuarios.forEach((usuario: any) => {
   
-  test(`Compra completa para el usuario: ${usuario.nombre}`, async ({ page }) => {
+  test(` TC01: Purchase complete for the user: ${usuario.nombre}`, async ({ page }) => {
     // Arrange (Login)
     await page.goto('https://www.saucedemo.com/');
     await page.locator('#user-name').fill('standard_user');
@@ -17,7 +20,7 @@ usuarios.forEach((usuario: any) => {
     await page.locator('.shopping_cart_link').click();
     await page.locator('#checkout').click();
 
-    // AQUÍ ESTÁ LA MAGIA: Usamos los datos del JSON
+    // Usamos los datos del JSON
     await page.locator('#first-name').fill(usuario.nombre);
     await page.locator('#last-name').fill(usuario.apellido);
     await page.locator('#postal-code').fill(usuario.cp);
@@ -28,5 +31,5 @@ usuarios.forEach((usuario: any) => {
     // Assert
     await expect(page.locator('.complete-header')).toHaveText('Thank you for your order!');
   });
-
+});
 });

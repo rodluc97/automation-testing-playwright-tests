@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+test.describe('User Story 002: Verify Shopping Cart Functionality', () => {
+
 test.beforeEach(async ({ page }) => {
   await page.goto('https://www.saucedemo.com/');
   await page.locator('#user-name').fill('standard_user');
@@ -7,7 +9,7 @@ test.beforeEach(async ({ page }) => {
   await page.locator('#login-button').click();
 });
 
-test('Debe completar una compra de principio a fin', async ({ page }) => {
+test('SD Cart: Complete shopping test', async ({ page }) => {
   // 1. Agregar producto y navegar al carrito
   await page.locator('#add-to-cart-sauce-labs-backpack').click();
   await page.locator('.shopping_cart_link').click();
@@ -36,4 +38,5 @@ test('Debe completar una compra de principio a fin', async ({ page }) => {
   
   // Foto de victoria: Se guardará en la carpeta raíz
   await page.screenshot({ path: 'compra_exitosa.png', fullPage: true });
+});
 });

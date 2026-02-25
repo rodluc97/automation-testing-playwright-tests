@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { SmallpdfPage } from '../pages/SmallpdfPage';
 import path from 'path';
 
-test.describe('US-002: Procesamiento de Documentos con IA', () => {
+test.describe('US-005: Verify Documents Processing with AI', () => {
   
   test.beforeEach(async ({ page }) => {
     const smallpdf = new SmallpdfPage(page);
@@ -10,7 +10,7 @@ test.describe('US-002: Procesamiento de Documentos con IA', () => {
     await smallpdf.aceptarCookies();
   });
 
-  test('TC-04: Resumen automático de PDF debe generar contenido de texto válido', async () => {
+  test('TC-04: Verify Automatic PDF summary must generate valid text content', async ({ page }) => {
     const smallpdf = new SmallpdfPage(page);
     await smallpdf.subirArchivo(path.resolve(__dirname, '../data/test.pdf'));
     await smallpdf.esperarResumen();
@@ -18,7 +18,7 @@ test.describe('US-002: Procesamiento de Documentos con IA', () => {
     expect(resumen.length).toBeGreaterThan(10);
   });
 
-  test('TC-05: Carga de archivo no soportado debe activar el manejo de errores de formato', async ({ page }) => {
+  test('TC-05: Verify Error Handling for Unsupported File Format Uploads', async ({ page }) => {
     const smallpdf = new SmallpdfPage(page);
     await smallpdf.subirArchivo(path.resolve(__dirname, '../data/imagen.jpg'));
     const errorMsg = page.locator('text=/formato no compatible|invalid file|not a PDF/i');
