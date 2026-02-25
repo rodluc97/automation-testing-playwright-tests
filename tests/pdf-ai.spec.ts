@@ -25,4 +25,3 @@ test.describe('US-002: Procesamiento de Documentos con IA', () => {
     await expect(errorMsg).toBeVisible({ timeout: 15000 });
   });
 });
-});
