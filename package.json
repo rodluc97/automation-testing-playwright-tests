@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.0"
+  },
+  "scripts": {
+  "test:clean": "rimraf *.png && npx playwright test tests/pdf-summarizer.spec.ts --project=chromium"
+}
+}

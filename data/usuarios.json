@@ -1,0 +1,17 @@
+[
+  {
+    "nombre": "Gonza",
+    "apellido": "QA",
+    "cp": "1111"
+  },
+  {
+    "nombre": "Estefania",
+    "apellido": "Tester",
+    "cp": "2222"
+  },
+  {
+    "nombre": "Carlos",
+    "apellido": "Bugs",
+    "cp": "3333"
+  }
+]
