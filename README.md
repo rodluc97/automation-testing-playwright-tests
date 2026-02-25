@@ -1,5 +1,3 @@
-![Playwright Tests](https://github.com/TU_USUARIO/TU_REPO/actions/workflows/playwright.yml/badge.svg)
-
 # Playwright Automation Suite
 
 Este proyecto es un framework de automatización robusto utilizando **Playwright** y **TypeScript**. Incluye pruebas de flujos de E-commerce, procesamiento de archivos con IA y manejo de interacciones complejas.
