@@ -1,28 +1,30 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
 
-test('Login exitoso en SauceDemo', async ({ page }) => {
-    // Arrange
-    await page.goto('https://www.saucedemo.com/');
+test.describe('US-001: Autenticación de Usuarios', () => {
 
-    // Act
-    await page.locator('#user-name').fill('standard_user');
-    await page.locator('#password').fill('secret_sauce');
-    await page.locator('#login-button').click();
+  test.beforeEach(async ({ page }) => {
+    const login = new LoginPage(page);
+    await login.goto();
+  });
 
-    // Assert
-    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
-});
+  test('TC-01: Login exitoso con credenciales válidas debe redirigir al inventario', async ({ page }) => {
+    const login = new LoginPage(page);
+    await login.login('standard_user', 'secret_sauce');
+    await login.estaEnInventario();
+  });
 
+  test('TC-02: Login fallido con usuario bloqueado debe mostrar mensaje de restricción', async ({ page }) => {
+    const login = new LoginPage(page);
+    await login.login('locked_out_user', 'secret_sauce');
+    const error = await login.obtenerMensajeError();
+    expect(error).toContain('Sorry, this user has been locked out');
+  });
 
-test('Login fallido con usuario bloqueado en SauceDemo', async ({ page }) => {
-    // Arrange
-    await page.goto('https://www.saucedemo.com/');
-
-    // Act
-    await page.locator('#user-name').fill('locked_out_user');
-    await page.locator('#password').fill('secret_sauce');
-    await page.locator('#login-button').click();
-
-    // Assert
-    await expect(page.locator('.error-message-container')).toHaveText('Epic sadface: Sorry, this user has been locked out.');
+  test('TC-03: Login fallido con datos inválidos debe mostrar mensaje de error de credenciales', async ({ page }) => {
+    const login = new LoginPage(page);
+    await login.login('invalid_user', 'wrong_pass');
+    const error = await login.obtenerMensajeError();
+    expect(error).toContain('Username and password do not match');
+  });
 });

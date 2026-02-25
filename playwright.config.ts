@@ -1,24 +1,17 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  /* Ejecutar tests en paralelo para ganar velocidad */
-  fullyParallel: true,
-  /* Fallar si te olvidas un .only en local */
-  forbidOnly: !!process.env.CI,
-  /* Reintentos en caso de fallo (útil para Smallpdf que a veces fluctúa) */
-  retries: 1,
-  /* Workers: Cuántos navegadores abrir a la vez. 
-     undefined usa el 50% de tus núcleos de CPU, lo cual es muy rápido. */
-  workers: undefined,
-  reporter: 'html',
+  fullyParallel: true, // Máxima velocidad
+  reporter: [['html'], ['list']], // Reporte web y lista en consola
   use: {
-    /* MODO HEADLESS: El secreto de la velocidad (no abre ventana) */
-    headless: true,
-    viewport: { width: 1280, height: 720 },
-    ignoreHTTPSErrors: true,
-    /* Solo grabar video si falla, para no perder tiempo procesando video en tests exitosos */
-    video: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    baseURL: 'https://www.saucedemo.com',
+    trace: 'retain-on-failure',    // Graba el paso a paso si falla
+    video: 'on-first-retry',       // Graba video si hay reintento
+    screenshot: 'only-on-failure', // Foto automática del error
+    headless: true,                // Rápido, sin abrir ventana
   },
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+  ],
 });

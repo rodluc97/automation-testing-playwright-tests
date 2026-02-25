@@ -1,20 +1,45 @@
-
 import { test, expect } from '@playwright/test';
+import { LoginPage } from './pages/LoginPage';
 
-test('Debe mostrar mensaje de error con usuario bloqueado', async ({ page }) => {
-    // Arrange: Ir a la web
-    await page.goto('https://www.saucedemo.com/');
+// Agrupamos los tests por módulo para mejorar la visibilidad en los reportes
+test.describe('Módulo de Autenticación - SauceDemo', () => {
 
-    // Act: Intentar login con usuario bloqueado
-    await page.locator('#user-name').fill('locked_out_user');
-    await page.locator('#password').fill('secret_sauce');
-    await page.locator('#login-button').click();
+  // Definimos la variable fuera para que esté disponible en todos los tests del grupo
+  let login: LoginPage;
 
-    // Assert: Validar el mensaje de error
-    // Buscamos el elemento que contiene el texto de error
-    const errorContainer = page.locator('[data-test="error"]');
+  // beforeEach se ejecuta antes de cada test, ahorrando líneas de código
+  test.beforeEach(async ({ page }) => {
+    login = new LoginPage(page);
+    await login.goto();
+  });
+
+  test('Debe realizar login exitosamente con usuario estándar', async ({ page }) => {
+    // 1. Acción: Loguearse
+    await login.login('standard_user', 'secret_sauce');
+
+    // 2. Validación: Verificar que la URL cambió a la del inventario
+    await login.estaEnInventario();
     
-    // Verificamos que sea visible y que tenga el texto específico
-    await expect(errorContainer).toBeVisible();
-    await expect(errorContainer).toHaveText('Epic sadface: Sorry, this user has been locked out.');
+    // 3. Validación extra: El título de la página debe ser el correcto
+    await expect(page).toHaveTitle('Swag Labs');
+  });
+
+  test('Escenario Negativo: No debe permitir el acceso a un usuario bloqueado', async () => {
+    // 1. Acción: Intentar login con usuario bloqueado
+    await login.login('locked_out_user', 'secret_sauce');
+
+    // 2. Validación: Obtener y verificar el mensaje de error
+    const error = await login.obtenerMensajeError();
+    expect(error).toContain('Sorry, this user has been locked out');
+  });
+
+  test('Escenario Negativo: Debe mostrar error con credenciales inválidas', async () => {
+    // 1. Acción: Datos incorrectos
+    await login.login('usuario_no_existente', 'clave_erronea');
+
+    // 2. Validación: El mensaje de error debe ser específico
+    const error = await login.obtenerMensajeError();
+    expect(error).toContain('Username and password do not match any user in this service');
+  });
+
 });
